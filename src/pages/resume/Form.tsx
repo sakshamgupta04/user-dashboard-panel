@@ -20,7 +20,24 @@ const ResumeForm: React.FC = () => {
     const parsedData = localStorage.getItem('parsed_resume_data');
     
     if (parsedData) {
-      setFormData(JSON.parse(parsedData));
+      try {
+        const data = JSON.parse(parsedData);
+        
+        // Initialize any potentially missing arrays to prevent null mapping errors
+        const safeData = {
+          ...data,
+          Skills: Array.isArray(data.Skills) ? data.Skills : [],
+          Projects: Array.isArray(data.Projects) ? data.Projects : [],
+          Achievements: Array.isArray(data.Achievements) ? data.Achievements : [],
+          Workshops: Array.isArray(data.Workshops) ? data.Workshops : [],
+          Trainings: Array.isArray(data.Trainings) ? data.Trainings : []
+        };
+        
+        setFormData(safeData);
+      } catch (error) {
+        toast.error('Error parsing resume data. Please try again.');
+        navigate('/resume/upload');
+      }
     } else {
       // If no data, redirect back to upload page
       toast.error('No resume data found. Please upload your resume first.');
@@ -73,6 +90,11 @@ const ResumeForm: React.FC = () => {
     return null;
   }
 
+  // Ensure all array fields exist to prevent mapping errors
+  const skills = formData.Skills || [];
+  const projects = formData.Projects || [];
+  const achievements = formData.Achievements || [];
+
   return (
     <div className="min-h-screen bg-[#0F111A] text-white p-4">
       <div className="container mx-auto max-w-4xl my-8">
@@ -93,7 +115,7 @@ const ResumeForm: React.FC = () => {
                     <Label htmlFor="ug-institute">Undergraduate Institute</Label>
                     <Input 
                       id="ug-institute"
-                      value={formData.UG_InstituteName} 
+                      value={formData.UG_InstituteName || ''} 
                       onChange={(e) => handleInputChange('UG_InstituteName', e.target.value)}
                       className="bg-[#0F111A] border-gray-700"
                     />
@@ -103,7 +125,7 @@ const ResumeForm: React.FC = () => {
                     <Label htmlFor="pg-institute">Postgraduate Institute</Label>
                     <Input 
                       id="pg-institute"
-                      value={formData.PG_InstituteName} 
+                      value={formData.PG_InstituteName || ''} 
                       onChange={(e) => handleInputChange('PG_InstituteName', e.target.value)}
                       className="bg-[#0F111A] border-gray-700"
                     />
@@ -122,7 +144,7 @@ const ResumeForm: React.FC = () => {
                     <Input 
                       id="longevity"
                       type="number"
-                      value={formData.Longevity_Years} 
+                      value={formData.Longevity_Years || 0} 
                       onChange={(e) => handleInputChange('Longevity_Years', Number(e.target.value))}
                       className="bg-[#0F111A] border-gray-700"
                     />
@@ -133,7 +155,7 @@ const ResumeForm: React.FC = () => {
                     <Input 
                       id="jobs"
                       type="number"
-                      value={formData.No_of_Jobs} 
+                      value={formData.No_of_Jobs || 0} 
                       onChange={(e) => handleInputChange('No_of_Jobs', Number(e.target.value))}
                       className="bg-[#0F111A] border-gray-700"
                     />
@@ -144,7 +166,7 @@ const ResumeForm: React.FC = () => {
                     <Input 
                       id="avg-exp"
                       type="number"
-                      value={formData.Experience_Average} 
+                      value={formData.Experience_Average || 0} 
                       onChange={(e) => handleInputChange('Experience_Average', Number(e.target.value))}
                       className="bg-[#0F111A] border-gray-700"
                       disabled
@@ -160,7 +182,7 @@ const ResumeForm: React.FC = () => {
               <h2 className="text-xl font-semibold mb-4 text-purple-light">Skills</h2>
               
               <div className="space-y-4">
-                {formData.Skills.map((skill, index) => (
+                {skills.map((skill, index) => (
                   <div key={`skill-${index}`}>
                     <Label htmlFor={`skill-${index}`}>Skill {index + 1}</Label>
                     <Input 
@@ -171,6 +193,9 @@ const ResumeForm: React.FC = () => {
                     />
                   </div>
                 ))}
+                {skills.length === 0 && (
+                  <div className="text-gray-400">No skills found in resume</div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -180,7 +205,7 @@ const ResumeForm: React.FC = () => {
               <h2 className="text-xl font-semibold mb-4 text-purple-light">Projects</h2>
               
               <div className="space-y-4">
-                {formData.Projects.map((project, index) => (
+                {projects.map((project, index) => (
                   <div key={`project-${index}`}>
                     <Label htmlFor={`project-${index}`}>Project {index + 1}</Label>
                     <Textarea 
@@ -191,6 +216,9 @@ const ResumeForm: React.FC = () => {
                     />
                   </div>
                 ))}
+                {projects.length === 0 && (
+                  <div className="text-gray-400">No projects found in resume</div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -200,7 +228,7 @@ const ResumeForm: React.FC = () => {
               <h2 className="text-xl font-semibold mb-4 text-purple-light">Achievements</h2>
               
               <div className="space-y-4">
-                {formData.Achievements.map((achievement, index) => (
+                {achievements.map((achievement, index) => (
                   <div key={`achievement-${index}`}>
                     <Label htmlFor={`achievement-${index}`}>Achievement {index + 1}</Label>
                     <Textarea 
@@ -211,6 +239,9 @@ const ResumeForm: React.FC = () => {
                     />
                   </div>
                 ))}
+                {achievements.length === 0 && (
+                  <div className="text-gray-400">No achievements found in resume</div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -223,7 +254,7 @@ const ResumeForm: React.FC = () => {
                 <Label htmlFor="best-fit">Best Suited Role</Label>
                 <Input 
                   id="best-fit"
-                  value={formData.Best_Fit_For} 
+                  value={formData.Best_Fit_For || ''} 
                   onChange={(e) => handleInputChange('Best_Fit_For', e.target.value)}
                   className="bg-[#0F111A] border-gray-700 mb-6"
                 />
@@ -234,7 +265,7 @@ const ResumeForm: React.FC = () => {
                     <Input 
                       id="total-papers"
                       type="number"
-                      value={formData.Total_Papers} 
+                      value={formData.Total_Papers || 0} 
                       onChange={(e) => handleInputChange('Total_Papers', Number(e.target.value))}
                       className="bg-[#0F111A] border-gray-700"
                     />
@@ -245,7 +276,7 @@ const ResumeForm: React.FC = () => {
                     <Input 
                       id="total-patents"
                       type="number"
-                      value={formData.Total_Patents} 
+                      value={formData.Total_Patents || 0} 
                       onChange={(e) => handleInputChange('Total_Patents', Number(e.target.value))}
                       className="bg-[#0F111A] border-gray-700"
                     />
@@ -256,7 +287,7 @@ const ResumeForm: React.FC = () => {
                     <Input 
                       id="books"
                       type="number"
-                      value={formData.Books} 
+                      value={formData.Books || 0} 
                       onChange={(e) => handleInputChange('Books', Number(e.target.value))}
                       className="bg-[#0F111A] border-gray-700"
                     />

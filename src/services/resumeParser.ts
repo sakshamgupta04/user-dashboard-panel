@@ -140,7 +140,18 @@ export const parseResumeWithGemini = async (resumeText: string): Promise<ParsedR
     }
     
     const parsedData = JSON.parse(jsonMatch[0]);
-    return parsedData as ParsedResumeData;
+
+    // Ensure all array fields are initialized
+    const safeData = {
+      ...parsedData,
+      Skills: Array.isArray(parsedData.Skills) ? parsedData.Skills : [],
+      Projects: Array.isArray(parsedData.Projects) ? parsedData.Projects : [],
+      Achievements: Array.isArray(parsedData.Achievements) ? parsedData.Achievements : [],
+      Workshops: Array.isArray(parsedData.Workshops) ? parsedData.Workshops : [],
+      Trainings: Array.isArray(parsedData.Trainings) ? parsedData.Trainings : []
+    };
+
+    return safeData as ParsedResumeData;
   } catch (error) {
     console.error('Error parsing resume with Gemini:', error);
     throw new Error('Failed to parse resume');
