@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +12,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ResumeUpload from "./pages/resume/Upload";
 import ResumeForm from "./pages/resume/Form";
+import Assessment from "./pages/assessment";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,11 @@ const App = () => (
             <Route path="/resume/form" element={
               <ProtectedRoute>
                 <ResumeForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/assessment" element={
+              <ProtectedRoute>
+                <Assessment />
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />

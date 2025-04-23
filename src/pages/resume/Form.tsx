@@ -109,6 +109,7 @@ const ResumeForm: React.FC = () => {
     };
     localStorage.setItem('parsed_resume_data', JSON.stringify(dataToSave));
     toast.success('Resume data saved successfully!');
+    navigate('/assessment');
   };
 
   if (loading) {
