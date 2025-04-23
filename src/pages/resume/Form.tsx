@@ -8,27 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from 'sonner';
-
-interface ParsedResumeData {
-  UG_InstituteName: string;
-  PG_InstituteName: string;
-  Longevity_Years: number;
-  Workshops: string[];
-  Trainings: string[];
-  Achievements_No: number;
-  Achievements: string[];
-  Skills_No: number;
-  Skills: string[];
-  Projects_No: number;
-  Projects: string[];
-  Total_Papers: number;
-  Total_Patents: number;
-  Books: number;
-  State_JK: number;
-  No_of_Jobs: number;
-  Experience_Average: number;
-  Best_Fit_For: string;
-}
+import { ParsedResumeData } from '@/services/resumeParser';
 
 const ResumeForm: React.FC = () => {
   const navigate = useNavigate();
@@ -75,7 +55,7 @@ const ResumeForm: React.FC = () => {
     // Save updated form data
     localStorage.setItem('parsed_resume_data', JSON.stringify(formData));
     toast.success('Resume data saved successfully!');
-    navigate('/dashboard');
+    // In a real app, you might want to send this data to a server or database
   };
 
   if (loading) {
@@ -299,7 +279,7 @@ const ResumeForm: React.FC = () => {
               onClick={handleSubmit}
               className="bg-purple hover:bg-purple/80 text-white px-8 py-2"
             >
-              Save & Continue
+              Save
             </Button>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Logo from '@/components/Logo';
 import { toast } from 'sonner';
 import { FileIcon } from "lucide-react";
+import { extractTextFromResume, parseResumeWithGemini } from '../../services/resumeParser';
 
 const ResumeUpload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -68,53 +69,29 @@ const ResumeUpload: React.FC = () => {
     setIsUploading(true);
 
     try {
-      // Simulate file upload delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Extract text from the resume file
+      const resumeText = await extractTextFromResume(file);
       
       // After successful upload, start parsing
       setIsUploading(false);
       setIsParsing(true);
       
-      // Simulate parsing with Gemini API
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Parse the resume text using Gemini AI
+      const parsedData = await parseResumeWithGemini(resumeText);
       
-      // Store parsed data in localStorage (in a real app, this would come from the API)
-      const mockParsedData = {
-        UG_InstituteName: "Stanford University",
-        PG_InstituteName: "MIT",
-        Longevity_Years: 5,
-        Workshops: ["Machine Learning Workshop", "Cloud Computing"],
-        Trainings: ["Leadership", "Project Management"],
-        Achievements_No: 4,
-        Achievements: ["Best Paper Award", "Hackathon Winner", "Dean's List", "Research Grant"],
-        Skills_No: 8,
-        Skills: ["Python", "JavaScript", "React", "Node.js", "Machine Learning", "Data Analysis", "SQL", "Git"],
-        Projects_No: 3,
-        Projects: [
-          "AI Chatbot - Developed using NLP techniques", 
-          "E-commerce Platform - Full-stack web application", 
-          "Data Visualization Dashboard - Using D3.js"
-        ],
-        Total_Papers: 2,
-        Total_Patents: 1,
-        Books: 0,
-        State_JK: 0,
-        No_of_Jobs: 2,
-        Experience_Average: 2.5,
-        Best_Fit_For: "Machine Learning Engineer"
-      };
-      
-      localStorage.setItem('parsed_resume_data', JSON.stringify(mockParsedData));
+      // Store parsed data in localStorage
+      localStorage.setItem('parsed_resume_data', JSON.stringify(parsedData));
       
       // Show parsing complete message
       setIsParsing(false);
       setIsParseComplete(true);
       
-    } catch (error) {
+      toast.success('Resume parsed successfully!');
+    } catch (error: any) {
       console.error('Error:', error);
       setIsUploading(false);
       setIsParsing(false);
-      toast.error('Failed to process the resume. Please try again.');
+      toast.error(error.message || 'Failed to process the resume. Please try again.');
     }
   };
 

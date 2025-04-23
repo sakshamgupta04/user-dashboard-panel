@@ -55,7 +55,7 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
   }
 };
 
-// Function to read text from DOCX file using mammoth instead of docx-parser
+// Function to read text from DOCX file using mammoth
 export const extractTextFromDocx = async (file: File): Promise<string> => {
   try {
     const mammoth = await import('mammoth');
@@ -100,17 +100,17 @@ export const parseResumeWithGemini = async (resumeText: string): Promise<ParsedR
     - Longevity_Years
     - Workshops
     - Trainings
-    - Achievements_No.
+    - Achievements_No
     - Achievements
-    - Skills_No.
+    - Skills_No
     - Skills
-    - Projects_No.
+    - Projects_No
     - Projects
     - Total_Papers
     - Total_Patents
     - Books
-    - State_J&K (1 for yes, 0 for no)
-    - No. of Jobs
+    - State_JK (1 for yes, 0 for no)
+    - No_of_Jobs
     - Experience_Average (Longevity_Years / No. of Jobs)
     - Best_Fit_For (Suggest a Computer Science job role suitable for the candidate)
 
