@@ -56,7 +56,7 @@ const ResumeForm: React.FC = () => {
           State_JK: typeof data.State_JK === "number" ? data.State_JK : 0,
           No_of_Jobs: typeof data.No_of_Jobs === "number" ? data.No_of_Jobs : 0,
           Experience_Average: typeof data.Experience_Average === "number" ? data.Experience_Average : 0,
-          // Best_Fit_For is removed from the UI
+          Best_Fit_For: typeof data.Best_Fit_For === "string" ? data.Best_Fit_For : "",
         });
       } catch (error) {
         toast.error('Error parsing resume data. Please try again.');
@@ -75,14 +75,14 @@ const ResumeForm: React.FC = () => {
         ...formData,
         [field]: value
       });
-    }
-    // If PG is edited to empty string, store "nil"
-    if (field === "PG_InstituteName" && value.trim() === "") {
-      setFormData({...formData!, PG_InstituteName: "nil"});
-    }
-    // For PhD, set phdPresent accordingly
-    if (field === "PHD_InstituteName") {
-      setPhdPresent(value.trim() !== "" ? 1 : 0);
+      // If PG is edited to empty string, store "nil"
+      if (field === "PG_InstituteName") {
+        setFormData(data => ({ ...data!, PG_InstituteName: value.trim() === "" ? "nil" : value }) as ExtendedParsedResumeData);
+      }
+      // For PhD, set phdPresent accordingly
+      if (field === "PHD_InstituteName") {
+        setPhdPresent(value.trim() !== "" ? 1 : 0);
+      }
     }
   };
 
@@ -96,6 +96,8 @@ const ResumeForm: React.FC = () => {
       if (field === "Skills") setFormData(data => ({ ...data!, Skills_No: items.length }) as ExtendedParsedResumeData);
       if (field === "Achievements") setFormData(data => ({ ...data!, Achievements_No: items.length }) as ExtendedParsedResumeData);
       if (field === "Projects") setFormData(data => ({ ...data!, Projects_No: items.length }) as ExtendedParsedResumeData);
+      if (field === "Workshops") setFormData(data => ({ ...data!, Workshops: items }) as ExtendedParsedResumeData);
+      if (field === "Trainings") setFormData(data => ({ ...data!, Trainings: items }) as ExtendedParsedResumeData);
     }
   };
 
@@ -108,7 +110,7 @@ const ResumeForm: React.FC = () => {
     const dataToSave = {
       ...formData,
       PG_InstituteName: formData?.PG_InstituteName?.trim() === "" ? "nil" : formData?.PG_InstituteName,
-      PHD_InstituteName: formData?.PHD_InstituteName,
+      PHD_InstituteName: phdPresent === 1 ? formData?.PHD_InstituteName : "",
       Experience_Average: avgExp,
       // Best_Fit_For is not saved here anymore
     };
@@ -147,15 +149,22 @@ const ResumeForm: React.FC = () => {
   const workshopLine = (formData.Workshops && formData.Workshops.length > 0) ? formData.Workshops.join(', ') : "0";
   const trainingLine = (formData.Trainings && formData.Trainings.length > 0) ? formData.Trainings.join(', ') : "0";
 
+  // Get numbers with 0 fallback
+  const skillsNo = typeof formData.Skills_No === "number" ? formData.Skills_No : 0;
+  const achNo = typeof formData.Achievements_No === "number" ? formData.Achievements_No : 0;
+  const projectsNo = typeof formData.Projects_No === "number" ? formData.Projects_No : 0;
+  const workshopsNo = Array.isArray(formData.Workshops) ? formData.Workshops.length : 0;
+  const trainingsNo = Array.isArray(formData.Trainings) ? formData.Trainings.length : 0;
+
   return (
     <div className="min-h-screen bg-[#0F111A] text-white p-4">
       <div className="container mx-auto max-w-3xl my-8">
         <div className="flex items-center justify-center mb-8"><Logo /></div>
         <h1 className="text-3xl font-bold mb-8 text-center text-purple-light">Review Your Resume Information</h1>
         <Card className="bg-[#1A1F2C] border-gray-800">
-          <CardContent className="p-8">
+          <CardContent className="p-8 space-y-1">
             <form className="space-y-4">
-              {/* Education */}
+              {/* Undergraduate Institute */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Undergraduate Institute</Label>
                 <Input
@@ -165,6 +174,7 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* Postgraduate Institute */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Postgraduate Institute</Label>
                 <Input
@@ -174,13 +184,15 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* PHD Institute */}
               <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">PHD Institute</Label>
+                <Label className="w-1/3">PHD Institute (1 = Yes, 0 = No)</Label>
                 <Input
                   value={phdPresent}
                   onChange={e => {
-                    const v = e.target.value === "1" ? (formData.PHD_InstituteName || "Some Institute") : "";
-                    handleInputChange('PHD_InstituteName', v)
+                    const val = Number(e.target.value);
+                    setPhdPresent(val);
+                    handleInputChange('PHD_InstituteName', val === 1 ? (phdName || "Some Institute") : "");
                   }}
                   type="number"
                   min={0}
@@ -189,26 +201,42 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* If PHD present, input name */}
+              {phdPresent === 1 && (
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">PHD Institute Name</Label>
+                  <Input
+                    value={phdName}
+                    onChange={e => handleInputChange('PHD_InstituteName', e.target.value)}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                  />
+                </div>
+              )}
 
-              {/* Work Experience */}
+              {/* No. of Unique Jobs */}
+              <div className="flex gap-4 items-center w-full">
+                <Label className="w-1/3">No. of Unique Jobs</Label>
+                <Input
+                  type="number"
+                  value={formData.No_of_Jobs ?? 0}
+                  onChange={e => handleInputChange('No_of_Jobs', Number(e.target.value))}
+                  className="bg-[#0F111A] border-gray-700"
+                  min={0}
+                />
+              </div>
+              {/* Work Experience (Years) */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Work Experience (Years)</Label>
                 <Input
                   type="number"
-                  value={formData.Longevity_Years || 0}
+                  value={formData.Longevity_Years ?? 0}
                   onChange={e => handleInputChange('Longevity_Years', Number(e.target.value))}
                   className="bg-[#0F111A] border-gray-700"
+                  min={0}
                 />
               </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Number of Jobs</Label>
-                <Input
-                  type="number"
-                  value={formData.No_of_Jobs || 0}
-                  onChange={e => handleInputChange('No_of_Jobs', Number(e.target.value))}
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
+              {/* Average Experience per Job */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Average Experience per Job</Label>
                 <Input
@@ -223,7 +251,17 @@ const ResumeForm: React.FC = () => {
                 />
               </div>
 
-              {/* Skills, Achievements, Projects, Workshops, Trainings, State */}
+              {/* Skills No. */}
+              <div className="flex gap-4 items-center w-full">
+                <Label className="w-1/3">Skills No.</Label>
+                <Input
+                  type="number"
+                  value={skillsNo}
+                  disabled
+                  className="bg-[#0F111A] border-gray-700"
+                />
+              </div>
+              {/* Skills */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Skills</Label>
                 <Input
@@ -233,6 +271,17 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* Achievements No. */}
+              <div className="flex gap-4 items-center w-full">
+                <Label className="w-1/3">Achievements No.</Label>
+                <Input
+                  type="number"
+                  value={achNo}
+                  disabled
+                  className="bg-[#0F111A] border-gray-700"
+                />
+              </div>
+              {/* Achievements */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Achievements</Label>
                 <Input
@@ -242,6 +291,17 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* Projects No. */}
+              <div className="flex gap-4 items-center w-full">
+                <Label className="w-1/3">Projects No.</Label>
+                <Input
+                  type="number"
+                  value={projectsNo}
+                  disabled
+                  className="bg-[#0F111A] border-gray-700"
+                />
+              </div>
+              {/* Projects */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Projects</Label>
                 <Input
@@ -251,6 +311,17 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* Workshops No. */}
+              <div className="flex gap-4 items-center w-full">
+                <Label className="w-1/3">Workshops No.</Label>
+                <Input
+                  type="number"
+                  value={workshopsNo}
+                  disabled
+                  className="bg-[#0F111A] border-gray-700"
+                />
+              </div>
+              {/* Workshops */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Workshops</Label>
                 <Input
@@ -260,6 +331,17 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* Trainings No. */}
+              <div className="flex gap-4 items-center w-full">
+                <Label className="w-1/3">Trainings No.</Label>
+                <Input
+                  type="number"
+                  value={trainingsNo}
+                  disabled
+                  className="bg-[#0F111A] border-gray-700"
+                />
+              </div>
+              {/* Trainings */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Trainings</Label>
                 <Input
@@ -269,6 +351,7 @@ const ResumeForm: React.FC = () => {
                   autoComplete="off"
                 />
               </div>
+              {/* State J&K */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">State J&amp;K (1 = Yes, 0 = No)</Label>
                 <Input
@@ -280,8 +363,7 @@ const ResumeForm: React.FC = () => {
                   className="bg-[#0F111A] border-gray-700"
                 />
               </div>
-
-              {/* Research / Publications / Books */}
+              {/* Papers */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Papers</Label>
                 <Input
@@ -291,6 +373,7 @@ const ResumeForm: React.FC = () => {
                   className="bg-[#0F111A] border-gray-700"
                 />
               </div>
+              {/* Patents */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Patents</Label>
                 <Input
@@ -300,6 +383,7 @@ const ResumeForm: React.FC = () => {
                   className="bg-[#0F111A] border-gray-700"
                 />
               </div>
+              {/* Books */}
               <div className="flex gap-4 items-center w-full">
                 <Label className="w-1/3">Books</Label>
                 <Input
@@ -333,3 +417,4 @@ const ResumeForm: React.FC = () => {
 };
 
 export default ResumeForm;
+
