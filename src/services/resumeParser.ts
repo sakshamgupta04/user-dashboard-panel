@@ -55,21 +55,17 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
   }
 };
 
-// Function to read text from DOCX file
+// Function to read text from DOCX file using mammoth instead of docx-parser
 export const extractTextFromDocx = async (file: File): Promise<string> => {
   try {
-    const { default: DocxParser } = await import('docx-parser');
+    const mammoth = await import('mammoth');
     
     // Convert file to array buffer
     const arrayBuffer = await file.arrayBuffer();
     
-    return new Promise((resolve, reject) => {
-      DocxParser.parseDocx(arrayBuffer, function(text: string) {
-        resolve(text);
-      }, function(error: any) {
-        reject(error);
-      });
-    });
+    // Use mammoth to extract text from the DOCX file
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    return result.value;
   } catch (error) {
     console.error('Error extracting text from DOCX:', error);
     throw new Error('Failed to extract text from DOCX');
