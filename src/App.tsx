@@ -11,6 +11,8 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ResumeUpload from "./pages/resume/Upload";
+import ResumeForm from "./pages/resume/Form";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,16 @@ const App = () => (
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/resume/upload" element={
+              <ProtectedRoute>
+                <ResumeUpload />
+              </ProtectedRoute>
+            } />
+            <Route path="/resume/form" element={
+              <ProtectedRoute>
+                <ResumeForm />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

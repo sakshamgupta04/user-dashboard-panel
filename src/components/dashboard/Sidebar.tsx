@@ -10,7 +10,8 @@ import {
   Settings, 
   LogOut, 
   ChevronRight,
-  BarChart2
+  BarChart2,
+  Upload
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -26,6 +27,11 @@ const Sidebar = () => {
       label: 'Candidates',
       icon: <Users size={18} />,
       path: '/dashboard/candidates'
+    },
+    {
+      label: 'Resume Upload',
+      icon: <Upload size={18} />,
+      path: '/resume/upload'
     },
     {
       label: 'Reports',

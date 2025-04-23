@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from "sonner";
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../integrations/supabase/client';
 
 // Define types for our context
 interface User {
@@ -22,7 +23,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock authentication for now (will be replaced with Supabase)
+// Authentication provider
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
@@ -64,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(userWithoutPassword);
       localStorage.setItem('people_ai_user', JSON.stringify(userWithoutPassword));
       toast.success('Login successful');
-      navigate('/dashboard');
+      navigate('/resume/upload');
     } catch (error: any) {
       toast.error(error.message || 'Login failed');
       throw error;
@@ -104,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem('people_ai_user', JSON.stringify(userWithoutPassword));
       
       toast.success('Account created successfully');
-      navigate('/dashboard');
+      navigate('/resume/upload');
     } catch (error: any) {
       toast.error(error.message || 'Signup failed');
       throw error;
