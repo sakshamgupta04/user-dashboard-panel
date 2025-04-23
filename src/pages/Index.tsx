@@ -1,17 +1,34 @@
-
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import ServiceCard from '../components/ServiceCard';
 import { Button } from '../components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const navigate = useNavigate();
-  
+
+  const serviceCards = [
+    {
+      imageUrl: "/lovable-uploads/102673b8-fb5e-4f01-8905-0f8a782e9666.png",
+      title: "Qualitative Analysis",
+      desc: "In-depth advanced analysis of faculty qualifications and fitment."
+    },
+    {
+      imageUrl: "/lovable-uploads/04f49cb9-f1df-4f4b-8f6f-909e9743b534.png",
+      title: "Fitment Rating",
+      desc: "Accurate rating system for prospective faculty members."
+    },
+    {
+      imageUrl: "/lovable-uploads/9acc30fb-df84-466c-91ed-0dbc80032f50.png",
+      title: "Data Insights",
+      desc: "Detailed insights and reports for better decision making."
+    }
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#0F111A] text-white">
+    <div className="min-h-screen flex flex-col bg-[#13152b] text-white" style={{fontFamily: 'Inter, sans-serif'}}>
       <Navbar />
-      
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="py-20 px-6 md:px-12 flex flex-col md:flex-row items-center max-w-7xl mx-auto">
@@ -75,24 +92,20 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Services Section */}
-        <section className="py-20 px-6 md:px-12">
+        {/* Our Services Section */}
+        <section className="py-20 px-4 md:px-0 bg-[#13152b]">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">Our Services</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="glass-card rounded-xl p-6 transition-all hover:translate-y-[-5px]">
-                  <div className="h-40 bg-gradient-to-br from-purple/30 to-purple-light/10 rounded-lg mb-4 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full bg-purple/30 flex items-center justify-center">
-                      <span className="text-3xl">🔍</span>
-                    </div>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">AI Candidate Analysis</h3>
-                  <p className="text-gray-400">
-                    Advanced algorithms analyze candidate profiles to find the perfect match for your academic needs.
-                  </p>
-                </div>
+            <h2 className="text-4xl font-bold text-center mb-14 text-purple" style={{ fontFamily: 'inherit' }}>
+              Our Services
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 justify-center place-items-center">
+              {serviceCards.map((service) => (
+                <ServiceCard
+                  key={service.title}
+                  imageUrl={service.imageUrl}
+                  title={service.title}
+                  desc={service.desc}
+                />
               ))}
             </div>
           </div>
