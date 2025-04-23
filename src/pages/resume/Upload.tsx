@@ -72,7 +72,7 @@ const ResumeUpload: React.FC = () => {
       // Extract text from the resume file
       const resumeText = await extractTextFromResume(file);
       
-      // After successful upload, start parsing
+      // After successful text extraction, start parsing
       setIsUploading(false);
       setIsParsing(true);
       

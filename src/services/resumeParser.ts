@@ -1,5 +1,6 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as pdfjs from 'pdfjs-dist';
 
 // Set up API key (in a real app, this would be stored securely)
 const API_KEY = 'AIzaSyAUyQ3aCQujGFpfE-2vPtOzIXJaeM15e00'; // This should be in an environment variable
@@ -26,17 +27,25 @@ export interface ParsedResumeData {
   Best_Fit_For: string;
 }
 
+// Set up the PDF.js worker
+const loadPdfWorker = async () => {
+  const pdfjsLib = await import('pdfjs-dist');
+  const pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.entry');
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+  return pdfjsLib;
+};
+
 // Function to read text from PDF file
 export const extractTextFromPdf = async (file: File): Promise<string> => {
   try {
-    // Using pdfjs to extract text
-    const { getDocument } = await import('pdfjs-dist');
+    // Initialize PDF.js with the worker
+    const pdfjsLib = await loadPdfWorker();
     
     // Convert file to array buffer
     const arrayBuffer = await file.arrayBuffer();
     
     // Load the PDF document
-    const pdf = await getDocument({ data: arrayBuffer }).promise;
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
     
     let text = '';
     
