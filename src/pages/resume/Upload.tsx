@@ -1,8 +1,6 @@
-
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import Logo from '@/components/Logo';
 import { toast } from 'sonner';
 import { FileIcon } from "lucide-react";
 import { extractTextFromResume, parseResumeWithGemini } from '../../services/resumeParser';
@@ -69,20 +67,15 @@ const ResumeUpload: React.FC = () => {
     setIsUploading(true);
 
     try {
-      // Extract text from the resume file
       const resumeText = await extractTextFromResume(file);
       
-      // After successful text extraction, start parsing
       setIsUploading(false);
       setIsParsing(true);
       
-      // Parse the resume text using Gemini AI
       const parsedData = await parseResumeWithGemini(resumeText);
       
-      // Store parsed data in localStorage
       localStorage.setItem('parsed_resume_data', JSON.stringify(parsedData));
       
-      // Show parsing complete message
       setIsParsing(false);
       setIsParseComplete(true);
       
@@ -102,13 +95,6 @@ const ResumeUpload: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col items-center bg-[#0F111A] text-white p-4">
       <div className="w-full max-w-5xl flex justify-center flex-col items-center my-10">
-        <Logo />
-        
-        <h1 className="text-5xl font-bold text-center text-purple-light mt-16 mb-2">
-          people.ai
-        </h1>
-        <p className="text-gray-400 text-lg mb-16">AI that finds your perfect hire</p>
-        
         <div className="bg-[#1A1F2C] rounded-2xl p-8 w-full max-w-xl">
           <div className="flex items-center justify-center mb-6">
             <FileIcon className="mr-2 text-purple-light" size={24} />

@@ -162,237 +162,238 @@ const ResumeForm: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0F111A] text-white p-4">
-      <div className="container mx-auto max-w-3xl my-8">
-        <div className="flex items-center justify-center mb-8"><Logo /></div>
-        <h1 className="text-3xl font-bold mb-8 text-center text-purple-light">Review Your Resume Information</h1>
-        <Card className="bg-[#1A1F2C] border-gray-800">
-          <CardContent className="p-8 space-y-1">
-            <form className="space-y-4">
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Undergraduate Institute</Label>
-                <Input
-                  value={ug}
-                  onChange={e => handleInputChange('UG_InstituteName', e.target.value)}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Postgraduate Institute</Label>
-                <Input
-                  value={pg}
-                  onChange={e => handleInputChange('PG_InstituteName', e.target.value)}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">PHD Institute (1 = Yes, 0 = No)</Label>
-                <Input
-                  value={phdPresent}
-                  onChange={e => {
-                    const val = Number(e.target.value);
-                    setPhdPresent(val);
-                    handleInputChange('PHD_InstituteName', val === 1 ? (formData.PHD_InstituteName || "") : "");
-                  }}
-                  type="number"
-                  min={0}
-                  max={1}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                />
-              </div>
-              {phdPresent === 1 && (
+      <div className="max-w-4xl mx-auto py-8">
+        <div className="bg-[#1A1F2C] rounded-2xl p-8">
+          <h2 className="text-2xl font-semibold text-center mb-8">Review Resume Information</h2>
+          <Card className="bg-[#1A1F2C] border-gray-800">
+            <CardContent className="p-8 space-y-1">
+              <form className="space-y-4">
                 <div className="flex gap-4 items-center w-full">
-                  <Label className="w-1/3">PHD Institute Name</Label>
+                  <Label className="w-1/3">Undergraduate Institute</Label>
                   <Input
-                    value={formData.PHD_InstituteName || ""}
-                    onChange={e => handleInputChange('PHD_InstituteName', e.target.value)}
+                    value={ug}
+                    onChange={e => handleInputChange('UG_InstituteName', e.target.value)}
                     className="bg-[#0F111A] border-gray-700"
                     autoComplete="off"
                   />
                 </div>
-              )}
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">No. of Unique Jobs</Label>
-                <Input
-                  type="number"
-                  value={noJobs}
-                  onChange={e => handleInputChange('No_of_Jobs', Number(e.target.value))}
-                  className="bg-[#0F111A] border-gray-700"
-                  min={0}
-                />
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Postgraduate Institute</Label>
+                  <Input
+                    value={pg}
+                    onChange={e => handleInputChange('PG_InstituteName', e.target.value)}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">PHD Institute (1 = Yes, 0 = No)</Label>
+                  <Input
+                    value={phdPresent}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      setPhdPresent(val);
+                      handleInputChange('PHD_InstituteName', val === 1 ? (formData.PHD_InstituteName || "") : "");
+                    }}
+                    type="number"
+                    min={0}
+                    max={1}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                  />
+                </div>
+                {phdPresent === 1 && (
+                  <div className="flex gap-4 items-center w-full">
+                    <Label className="w-1/3">PHD Institute Name</Label>
+                    <Input
+                      value={formData.PHD_InstituteName || ""}
+                      onChange={e => handleInputChange('PHD_InstituteName', e.target.value)}
+                      className="bg-[#0F111A] border-gray-700"
+                      autoComplete="off"
+                    />
+                  </div>
+                )}
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">No. of Unique Jobs</Label>
+                  <Input
+                    type="number"
+                    value={noJobs}
+                    onChange={e => handleInputChange('No_of_Jobs', Number(e.target.value))}
+                    className="bg-[#0F111A] border-gray-700"
+                    min={0}
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Work Experience (Years)</Label>
+                  <Input
+                    type="number"
+                    value={longevity}
+                    onChange={e => handleInputChange('Longevity_Years', Number(e.target.value))}
+                    className="bg-[#0F111A] border-gray-700"
+                    min={0}
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Average Experience per Job</Label>
+                  <Input
+                    type="number"
+                    value={avgExperience}
+                    disabled
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Skills No.</Label>
+                  <Input
+                    type="number"
+                    value={skillsNo}
+                    disabled
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Skills</Label>
+                  <Input
+                    value={skillsLine}
+                    onChange={e => handleCommaSeparatedInputChange('Skills', e.target.value)}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                    placeholder="e.g. Python, JS"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Achievements No.</Label>
+                  <Input
+                    type="number"
+                    value={achNo}
+                    disabled
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Achievements</Label>
+                  <Input
+                    value={achLine}
+                    onChange={e => handleCommaSeparatedInputChange('Achievements', e.target.value)}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                    placeholder="e.g. Award, Prize"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Projects No.</Label>
+                  <Input
+                    type="number"
+                    value={projectsNo}
+                    disabled
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Projects</Label>
+                  <Input
+                    value={projectLine}
+                    onChange={e => handleCommaSeparatedInputChange('Projects', e.target.value)}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                    placeholder="e.g. Project1, Project2"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Workshops No.</Label>
+                  <Input
+                    type="number"
+                    value={workshopsNo}
+                    disabled
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Workshops</Label>
+                  <Input
+                    value={workshopLine}
+                    onChange={e => handleCommaSeparatedInputChange('Workshops', e.target.value)}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                    placeholder="e.g. Workshop A, Workshop B"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Trainings No.</Label>
+                  <Input
+                    type="number"
+                    value={trainingsNo}
+                    disabled
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Trainings</Label>
+                  <Input
+                    value={trainingLine}
+                    onChange={e => handleCommaSeparatedInputChange('Trainings', e.target.value)}
+                    className="bg-[#0F111A] border-gray-700"
+                    autoComplete="off"
+                    placeholder="e.g. Training X, Training Y"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">State J&amp;K (1 = Yes, 0 = No)</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    max={1}
+                    value={stateJK}
+                    onChange={e => handleInputChange('State_JK', Number(e.target.value))}
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Papers</Label>
+                  <Input
+                    type="number"
+                    value={papers}
+                    onChange={e => handleInputChange('Total_Papers', Number(e.target.value))}
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Patents</Label>
+                  <Input
+                    type="number"
+                    value={patents}
+                    onChange={e => handleInputChange('Total_Patents', Number(e.target.value))}
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+                <div className="flex gap-4 items-center w-full">
+                  <Label className="w-1/3">Books</Label>
+                  <Input
+                    type="number"
+                    value={books}
+                    onChange={e => handleInputChange('Books', Number(e.target.value))}
+                    className="bg-[#0F111A] border-gray-700"
+                  />
+                </div>
+              </form>
+              <div className="flex justify-end space-x-4 mt-8">
+                <Button
+                  onClick={() => navigate('/resume/upload')}
+                  variant="outline"
+                  className="border-purple text-purple-light hover:bg-purple/10"
+                >
+                  Back
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  className="bg-purple hover:bg-purple/80 text-white px-8 py-2"
+                >
+                  Save
+                </Button>
               </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Work Experience (Years)</Label>
-                <Input
-                  type="number"
-                  value={longevity}
-                  onChange={e => handleInputChange('Longevity_Years', Number(e.target.value))}
-                  className="bg-[#0F111A] border-gray-700"
-                  min={0}
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Average Experience per Job</Label>
-                <Input
-                  type="number"
-                  value={avgExperience}
-                  disabled
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Skills No.</Label>
-                <Input
-                  type="number"
-                  value={skillsNo}
-                  disabled
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Skills</Label>
-                <Input
-                  value={skillsLine}
-                  onChange={e => handleCommaSeparatedInputChange('Skills', e.target.value)}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                  placeholder="e.g. Python, JS"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Achievements No.</Label>
-                <Input
-                  type="number"
-                  value={achNo}
-                  disabled
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Achievements</Label>
-                <Input
-                  value={achLine}
-                  onChange={e => handleCommaSeparatedInputChange('Achievements', e.target.value)}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                  placeholder="e.g. Award, Prize"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Projects No.</Label>
-                <Input
-                  type="number"
-                  value={projectsNo}
-                  disabled
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Projects</Label>
-                <Input
-                  value={projectLine}
-                  onChange={e => handleCommaSeparatedInputChange('Projects', e.target.value)}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                  placeholder="e.g. Project1, Project2"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Workshops No.</Label>
-                <Input
-                  type="number"
-                  value={workshopsNo}
-                  disabled
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Workshops</Label>
-                <Input
-                  value={workshopLine}
-                  onChange={e => handleCommaSeparatedInputChange('Workshops', e.target.value)}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                  placeholder="e.g. Workshop A, Workshop B"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Trainings No.</Label>
-                <Input
-                  type="number"
-                  value={trainingsNo}
-                  disabled
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Trainings</Label>
-                <Input
-                  value={trainingLine}
-                  onChange={e => handleCommaSeparatedInputChange('Trainings', e.target.value)}
-                  className="bg-[#0F111A] border-gray-700"
-                  autoComplete="off"
-                  placeholder="e.g. Training X, Training Y"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">State J&amp;K (1 = Yes, 0 = No)</Label>
-                <Input
-                  type="number"
-                  min={0}
-                  max={1}
-                  value={stateJK}
-                  onChange={e => handleInputChange('State_JK', Number(e.target.value))}
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Papers</Label>
-                <Input
-                  type="number"
-                  value={papers}
-                  onChange={e => handleInputChange('Total_Papers', Number(e.target.value))}
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Patents</Label>
-                <Input
-                  type="number"
-                  value={patents}
-                  onChange={e => handleInputChange('Total_Patents', Number(e.target.value))}
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-              <div className="flex gap-4 items-center w-full">
-                <Label className="w-1/3">Books</Label>
-                <Input
-                  type="number"
-                  value={books}
-                  onChange={e => handleInputChange('Books', Number(e.target.value))}
-                  className="bg-[#0F111A] border-gray-700"
-                />
-              </div>
-            </form>
-            <div className="flex justify-end space-x-4 mt-8">
-              <Button
-                onClick={() => navigate('/resume/upload')}
-                variant="outline"
-                className="border-purple text-purple-light hover:bg-purple/10"
-              >
-                Back
-              </Button>
-              <Button
-                onClick={handleSubmit}
-                className="bg-purple hover:bg-purple/80 text-white px-8 py-2"
-              >
-                Save
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
