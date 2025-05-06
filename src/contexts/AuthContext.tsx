@@ -100,12 +100,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       mockUsers.push(newUser);
       localStorage.setItem('people_ai_users', JSON.stringify(mockUsers));
       
-      const { password: _, ...userWithoutPassword } = newUser;
-      setUser(userWithoutPassword);
-      localStorage.setItem('people_ai_user', JSON.stringify(userWithoutPassword));
-      
-      toast.success('Account created successfully');
-      navigate('/resume/upload');
+      toast.success('Account created successfully. Please login to continue.');
+      navigate('/login');
     } catch (error: any) {
       toast.error(error.message || 'Signup failed');
       throw error;
